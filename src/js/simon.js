@@ -23,7 +23,7 @@ Simon.prototype.generateRandomPosition = function (lastPosition) {
         } while (lastPosition == random);
     }
     return random;
-}
+};
 
 // Generate game level with non-consecutive positions
 Simon.prototype.generateLevel = function () {
@@ -40,33 +40,42 @@ Simon.prototype.generateLevel = function () {
     } else {
         return 'Game Over';
     }
-}
-
+};
 
 Simon.prototype.initEvents = function () {
-    // console.log('init events');
-    // Buttons event listeners
-    // TODO: check if game is in progress
     document.getElementById("skill1").addEventListener("click", function () {
         this.skillLevel = 8;
-        console.log(this.skillLevel)
+        console.log(this.skillLevel);
     });
 
     document.getElementById("skill2").addEventListener("click", function () {
         this.skillLevel = 14;
-        console.log(this.skillLevel)
+        console.log(this.skillLevel);
     });
 
     document.getElementById("skill3").addEventListener("click", function () {
         this.skillLevel = 20;
-        console.log(this.skillLevel)
+        console.log(this.skillLevel);
     });
 
     document.getElementById("skill4").addEventListener("click", function () {
         this.skillLevel = 31;
-        console.log(this.skillLevel)
+        console.log(this.skillLevel);
     });
-}
+
+    document.getElementById("btn-last").addEventListener("click", function () {
+        console.log('LAST pressed');
+    });
+
+    document.getElementById("btn-start").addEventListener("click", function () {
+        console.log('START pressed');
+    });
+
+    document.getElementById("btn-longest").addEventListener("click", function () {
+        console.log('LONGEST pressed');
+    });
+};
+
 
 var game = new Simon(8);
 

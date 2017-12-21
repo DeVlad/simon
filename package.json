@@ -8,6 +8,8 @@
         "url": "git://github.com/DeVlad/simon.git"
     },
     "devDependencies": {
+        "autoprefixer": "^7.2.3",
+        "cssnano": "^3.10.0",
         "grunt": "^1.0.1",
         "grunt-auto-install": "^0.3.1",
         "grunt-contrib-copy": "^1.0.0",
