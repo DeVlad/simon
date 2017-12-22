@@ -10,9 +10,10 @@ var settings = {};
 
 function Simon(skillLevel) {
     this.skillLevel = skillLevel;
-    this.lastLevel = 0;
+    this.lastLevel = 2;
     this.initEvents();
     this.sequence = [];
+    this.longest = [];
 }
 
 Simon.prototype.generateRandomPosition = function (lastPosition) {
@@ -30,7 +31,8 @@ Simon.prototype.generateLevel = function () {
     if (this.lastLevel < this.skillLevel) {
         var level = [];
         var lastPosition = 0;
-        for (var i = 0; i <= this.lastLevel; i++) {
+
+        for (var i = 0; i < this.lastLevel; i++) {
             level.push(this.generateRandomPosition(lastPosition));
             lastPosition = level[i];
         }
@@ -63,9 +65,8 @@ Simon.prototype.initEvents = function () {
         console.log(this.skillLevel);
     });
 
-    document.getElementById("btn-last").addEventListener("click", function () {
-        console.log('LAST pressed');
-    });
+    document.getElementById("btn-last").addEventListener("click", this.displayLastSequence.bind(this)); // TODO: check if game in progress
+
 
     document.getElementById("btn-start").addEventListener("click", function () {
         console.log('START pressed');
@@ -76,9 +77,35 @@ Simon.prototype.initEvents = function () {
     });
 };
 
+Simon.prototype.illuminateButton = function (buttonId, time) {
+    setTimeout(function () {
+        document.getElementById(buttonId).classList.add("lighten");
+    }, time);
+
+    setTimeout(function () {
+        document.getElementById(buttonId).classList.remove("lighten");
+    }, time + 1000);
+};
+
+Simon.prototype.displayLastSequence = function () {
+    console.log('Last Sequence', this.sequence);
+    var time = 0;
+    for (var i = 0; i < this.sequence.length; i++) {
+        // console.log('btn ', this.sequence[i]);        
+        var buttonId = 'btn-' + this.sequence[i]
+        time = time + 1000;
+        this.illuminateButton(buttonId, time);
+    }
+};
+
+Simon.prototype.test = function () {
+    alert('test');
+};
 
 var game = new Simon(8);
 
 console.log('Test', game.generateLevel());
-console.log('Test', game.generateLevel());
-console.log('Seq', game.sequence);
+
+//console.log('Seq', game.sequence);
+//console.log(game.illuminateButton());
+console.log(game.displayLastSequence());
