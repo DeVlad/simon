@@ -10,10 +10,10 @@ var settings = {};
 
 function Simon(skillLevel) {
     this.skillLevel = skillLevel;
-    this.lastLevel = 2;
-    this.initEvents();
+    this.lastLevel = 4;    
     this.sequence = [];
     this.longest = [];
+    this.initEvents();
 }
 
 Simon.prototype.generateRandomPosition = function (lastPosition) {
@@ -28,7 +28,7 @@ Simon.prototype.generateRandomPosition = function (lastPosition) {
 
 // Generate game level with non-consecutive positions
 Simon.prototype.generateLevel = function () {
-    if (this.lastLevel < this.skillLevel) {
+    if (this.lastLevel <= this.skillLevel) {
         var level = [];
         var lastPosition = 0;
 
@@ -98,8 +98,9 @@ Simon.prototype.displayLastSequence = function () {
     }
 };
 
-Simon.prototype.test = function () {
-    alert('test');
+Simon.prototype.displayLevel = function () {
+    var displayLevel = this.lastLevel == 0 ? this.lastlevel + 1 : this.lastLevel - 1;
+    document.getElementById("display").innerHTML = displayLevel;
 };
 
 var game = new Simon(8);
@@ -109,3 +110,4 @@ console.log('Test', game.generateLevel());
 //console.log('Seq', game.sequence);
 //console.log(game.illuminateButton());
 console.log(game.displayLastSequence());
+game.displayLevel();

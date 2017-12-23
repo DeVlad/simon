@@ -30,6 +30,11 @@ h2 {
     text-align: center;
 }
 
+#display {
+    border: 1px solid gray;
+    font-size: 30px;
+} 
+
 #btn-1 {
     display: inline-block;
     height: 200px;
