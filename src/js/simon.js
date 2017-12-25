@@ -28,6 +28,7 @@ function Simon(skillLevel) {
     this.sequence = [];
     this.longest = [];
     this.initEvents(settings.buttons);
+    this.lockButtons = false;
 }
 
 Simon.prototype.generateRandomPosition = function (lastPosition) {
@@ -58,7 +59,7 @@ Simon.prototype.generateLevel = function () {
 };
 
 Simon.prototype.initEvents = function (buttons) {
-    console.log(settings);
+    //console.log(settings);
     document.getElementById(buttons.skillLevel1).addEventListener("click", function () {
         this.skillLevel = 8;
         console.log(this.skillLevel);
@@ -89,35 +90,38 @@ Simon.prototype.initEvents = function (buttons) {
         console.log('LONGEST pressed');
     });
 
-    document.getElementById(buttons.green).addEventListener("click", function () {
-        console.log('Green pressed');
-    });
-
-    document.getElementById(buttons.red).addEventListener("click", function () {
-        console.log('Red pressed');
-    });
-
-    document.getElementById(buttons.blue).addEventListener("click", function () {
-        console.log('Blue pressed');
-    });
-
-    document.getElementById(buttons.yellow).addEventListener("click", function () {
-        console.log('Yellow pressed');
-    });
+    document.getElementById(buttons.green).addEventListener("click", this.illuminateButton.bind(this, buttons.green, 0));
+    document.getElementById(buttons.red).addEventListener("click", this.illuminateButton.bind(this, buttons.red, 0));
+    document.getElementById(buttons.blue).addEventListener("click", this.illuminateButton.bind(this, buttons.blue, 0));
+    document.getElementById(buttons.yellow).addEventListener("click", this.illuminateButton.bind(this, buttons.yellow, 0));    
 };
 
-Simon.prototype.illuminateButton = function (buttonId, time) {
+Simon.prototype.test = function () {
+    alert('TEST');
+}
+
+Simon.prototype.illuminateButton = function (buttonId, time) {  
+    var time2 = 0; // button light off delay    
+    
+    if(time == 0){ // User click on colored buttons        
+        time = 400;
+        time2 = 600;
+    } else {
+        time2 = time + 1000;
+    }    
+    
     setTimeout(function () {
         document.getElementById(buttonId).classList.add("lighten");
     }, time);
 
     setTimeout(function () {
         document.getElementById(buttonId).classList.remove("lighten");
-    }, time + 1000);
+    }, time2);
 };
 
 Simon.prototype.displayLastSequence = function () {
     console.log('Last Sequence', this.sequence);
+    
     var time = 0;
     for (var i = 0; i < this.sequence.length; i++) {
         // console.log('btn ', this.sequence[i]);        
