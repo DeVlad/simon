@@ -31,10 +31,19 @@ module.exports = function (grunt) {
                 stoponerror: false,
                 //    remotePath: '',
                 //    remoteFiles: [''],
-                relaxerror: ['Bad value X-UA-Compatible for attribute http-equiv on element meta.']//ignores these errors
+                relaxerror: ['Bad value X-UA-Compatible for attribute http-equiv on element meta.'] //ignores these errors
             },
             files: {
                 src: ['src/*.html', 'src/*.htm']
+            }
+        },
+        concat: {
+            dist: {
+                src: [
+          'src/css/reset.css',
+          'src/css/style.css',
+        ],
+                dest: 'tmp/concatenated.css'
             }
         },
         postcss: {
@@ -54,7 +63,7 @@ module.exports = function (grunt) {
       ]
             },
             dist: {
-                src: 'src/css/*.css',
+                src: 'tmp/concatenated.css',
                 dest: 'build/css/style.min.css'
             }
         },
@@ -80,11 +89,11 @@ module.exports = function (grunt) {
                 },
                 files: { // Dictionary of files 
                     'build/index.html': 'build/index.html' //, // 'destination': 'source'
-                        //'dist/contact.html': 'src/contact.html'
+                    //'dist/contact.html': 'src/contact.html'
                 }
             }
         },
-        
+
         copy: {
             main: {
                 files: [
@@ -94,8 +103,8 @@ module.exports = function (grunt) {
                         cwd: 'src/img',
                         src: ['**'],
                         dest: 'build/img/'
-                    }                    
-                    
+                    }
+
       // includes files within path and its sub-directories
      // {expand: true, src: ['path/**'], dest: 'dest/'},
 
@@ -118,6 +127,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-auto-install');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-w3c-html-validation');
+    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-postcss');
     //grunt.loadNpmTasks('grunt-newer');
     //grunt.loadNpmTasks('grunt-img');
@@ -130,5 +140,5 @@ module.exports = function (grunt) {
     //grunt.loadNpmTasks('babel');
     // Default tasks
     //grunt.registerTask('default', ['auto_install', 'validation', 'uglify', 'postcss', 'processhtml', 'htmlmin', 'copy']);
-    grunt.registerTask('default', ['auto_install', 'uglify', 'postcss', 'processhtml', 'htmlmin']);
+    grunt.registerTask('default', ['auto_install', 'uglify', 'concat', 'postcss', 'processhtml', 'htmlmin']);
 };

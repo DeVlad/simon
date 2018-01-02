@@ -93,23 +93,23 @@ Simon.prototype.initEvents = function (buttons) {
     document.getElementById(buttons.green).addEventListener("click", this.illuminateButton.bind(this, buttons.green, 0));
     document.getElementById(buttons.red).addEventListener("click", this.illuminateButton.bind(this, buttons.red, 0));
     document.getElementById(buttons.blue).addEventListener("click", this.illuminateButton.bind(this, buttons.blue, 0));
-    document.getElementById(buttons.yellow).addEventListener("click", this.illuminateButton.bind(this, buttons.yellow, 0));    
+    document.getElementById(buttons.yellow).addEventListener("click", this.illuminateButton.bind(this, buttons.yellow, 0));
 };
 
 Simon.prototype.test = function () {
     alert('TEST');
-}
+};
 
-Simon.prototype.illuminateButton = function (buttonId, time) {  
-    var time2 = 0; // button light off delay    
-    
-    if(time == 0){ // User click on colored buttons        
+Simon.prototype.illuminateButton = function (buttonId, time) {
+    var time2 = 0; // button light off delay
+
+    if (time === 0) { // User click on colored buttons        
         time = 400;
         time2 = 600;
     } else {
         time2 = time + 1000;
-    }    
-    
+    }
+
     setTimeout(function () {
         document.getElementById(buttonId).classList.add("lighten");
     }, time);
@@ -121,7 +121,7 @@ Simon.prototype.illuminateButton = function (buttonId, time) {
 
 Simon.prototype.displayLastSequence = function () {
     console.log('Last Sequence', this.sequence);
-    
+
     var time = 0;
     for (var i = 0; i < this.sequence.length; i++) {
         // console.log('btn ', this.sequence[i]);        
@@ -132,7 +132,7 @@ Simon.prototype.displayLastSequence = function () {
 };
 
 Simon.prototype.displayLevel = function () {
-    var displayLevel = this.lastLevel == 0 ? this.lastlevel + 1 : this.lastLevel - 1;
+    var displayLevel = this.lastLevel === 0 ? this.lastlevel + 1 : this.lastLevel - 1;
     document.getElementById("display").innerHTML = displayLevel;
 };
 
