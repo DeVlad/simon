@@ -28,7 +28,6 @@ function Simon(skillLevel) {
     this.sequence = [];
     this.longest = [];
     this.initEvents(settings.buttons);
-    this.lockButtons = false;
 }
 
 Simon.prototype.generateRandomPosition = function (lastPosition) {
@@ -60,44 +59,35 @@ Simon.prototype.generateLevel = function () {
 
 Simon.prototype.initEvents = function (buttons) {
     //console.log(settings);
-    document.getElementById(buttons.skillLevel1).addEventListener("click", function () {
-        this.skillLevel = 8;
-        console.log(this.skillLevel);
-    });
-
-    document.getElementById(buttons.skillLevel2).addEventListener("click", function () {
-        this.skillLevel = 14;
-        console.log(this.skillLevel);
-    });
-
-    document.getElementById(buttons.skillLevel3).addEventListener("click", function () {
-        this.skillLevel = 20;
-        console.log(this.skillLevel);
-    });
-
-    document.getElementById(buttons.skillLevel4).addEventListener("click", function () {
-        this.skillLevel = 31;
-        console.log(this.skillLevel);
-    });
-
+    document.getElementById(buttons.skillLevel1).addEventListener("click", this.changeSkillLevel.bind(this, 8));
+    document.getElementById(buttons.skillLevel2).addEventListener("click", this.changeSkillLevel.bind(this, 14));
+    document.getElementById(buttons.skillLevel3).addEventListener("click", this.changeSkillLevel.bind(this, 20));
+    document.getElementById(buttons.skillLevel4).addEventListener("click", this.changeSkillLevel.bind(this, 31));
     document.getElementById(buttons.last).addEventListener("click", this.displayLastSequence.bind(this)); // TODO: check if game in progress
-
-    document.getElementById(buttons.start).addEventListener("click", function () {
-        console.log('START pressed');
-    });
-
+    document.getElementById(buttons.start).addEventListener("click", this.start.bind(this));
     document.getElementById(buttons.longest).addEventListener("click", function () {
         console.log('LONGEST pressed');
     });
-
     document.getElementById(buttons.green).addEventListener("click", this.illuminateButton.bind(this, buttons.green, 0));
     document.getElementById(buttons.red).addEventListener("click", this.illuminateButton.bind(this, buttons.red, 0));
     document.getElementById(buttons.blue).addEventListener("click", this.illuminateButton.bind(this, buttons.blue, 0));
     document.getElementById(buttons.yellow).addEventListener("click", this.illuminateButton.bind(this, buttons.yellow, 0));
 };
 
-Simon.prototype.test = function () {
-    alert('TEST');
+Simon.prototype.start = function () {
+    // start or reset game
+    this.sequence = [];
+    this.lastLevel = 1;
+    this.generateLevel();
+    this.displayLevel();
+    this.displayLastSequence();
+    console.log('Start');
+};
+
+Simon.prototype.changeSkillLevel = function (level) {
+    console.log('skill', level);
+    this.skillLevel = level;
+    this.start(); //Restart game;
 };
 
 Simon.prototype.illuminateButton = function (buttonId, time) {
@@ -117,11 +107,11 @@ Simon.prototype.illuminateButton = function (buttonId, time) {
     setTimeout(function () {
         document.getElementById(buttonId).classList.remove("lighten");
     }, time2);
+
 };
 
 Simon.prototype.displayLastSequence = function () {
     console.log('Last Sequence', this.sequence);
-
     var time = 0;
     for (var i = 0; i < this.sequence.length; i++) {
         // console.log('btn ', this.sequence[i]);        
@@ -137,10 +127,3 @@ Simon.prototype.displayLevel = function () {
 };
 
 var game = new Simon();
-
-console.log('Test', game.generateLevel());
-
-//console.log('Seq', game.sequence);
-//console.log(game.illuminateButton());
-//console.log(game.displayLastSequence());
-game.displayLevel();
