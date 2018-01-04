@@ -99,9 +99,11 @@ Simon.prototype.illuminateButton = function (buttonId, time) {
     } else {
         time2 = time + 1000;
     }
-
+    //
+    var that = this;
     setTimeout(function () {
         document.getElementById(buttonId).classList.add("lighten");
+        that.playSound(buttonId);
     }, time);
 
     setTimeout(function () {
@@ -124,6 +126,12 @@ Simon.prototype.displayLastSequence = function () {
 Simon.prototype.displayLevel = function () {
     var displayLevel = this.lastLevel === 0 ? this.lastlevel + 1 : this.lastLevel - 1;
     document.getElementById("display").innerHTML = displayLevel;
+};
+
+Simon.prototype.playSound = function (buttonId) {
+    var id = 'sound-' + buttonId;
+    var sound = document.getElementById(id);
+    sound.play();
 };
 
 var game = new Simon();
