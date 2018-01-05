@@ -18,7 +18,9 @@ var settings = {
         skillLevel4: "skill4",
         start: "btn-start",
         last: "btn-last",
-        longest: "btn-longest"
+        longest: "btn-longest",
+        strict: "btn-strict",
+        strictIcon: "icon-strict"
     }
 };
 
@@ -27,6 +29,7 @@ function Simon(skillLevel) {
     this.lastLevel = 4;
     this.sequence = [];
     this.longest = [];
+    this.strict = false;
     this.initEvents(settings.buttons);
 }
 
@@ -68,6 +71,7 @@ Simon.prototype.initEvents = function (buttons) {
     document.getElementById(buttons.longest).addEventListener("click", function () {
         console.log('LONGEST pressed');
     });
+    document.getElementById(buttons.strict).addEventListener("click", this.strictMode.bind(this, buttons.strict, buttons.strictIcon));
     document.getElementById(buttons.green).addEventListener("click", this.illuminateButton.bind(this, buttons.green, 0));
     document.getElementById(buttons.red).addEventListener("click", this.illuminateButton.bind(this, buttons.red, 0));
     document.getElementById(buttons.blue).addEventListener("click", this.illuminateButton.bind(this, buttons.blue, 0));
@@ -132,6 +136,22 @@ Simon.prototype.playSound = function (buttonId) {
     var id = 'sound-' + buttonId;
     var sound = document.getElementById(id);
     sound.play();
+};
+
+Simon.prototype.strictMode = function (buttonId, iconId) {
+        var strictModeStatus = 'Unknown';
+        if (this.strict) {
+            this.strict = false;
+            strictModeStatus = 'NO';
+            document.getElementById(iconId).classList.remove("red");
+            document.getElementById(iconId).classList.add("green");
+        } else {
+            this.strict = true;
+            strictModeStatus = 'YES';
+            document.getElementById(iconId).classList.remove("green");
+            document.getElementById(iconId).classList.add("red");
+        }
+        console.log('Strict mode: ', strictModeStatus);
 };
 
 var game = new Simon();
