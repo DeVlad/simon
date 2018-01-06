@@ -27,8 +27,9 @@ var settings = {
 function Simon(skillLevel) {
     this.skillLevel = skillLevel | 8;
     this.lastLevel = 4;
-    this.sequence = [];
+    this.sequence = [];    
     this.longest = [];
+    this.moveCount = 0;
     this.strict = false;
     this.initEvents(settings.buttons);
 }
@@ -54,6 +55,7 @@ Simon.prototype.generateLevel = function () {
         }
         this.lastLevel++;
         this.sequence = level;
+        this.moveCount = 0;
         return level;
     } else {
         return 'Game Over';
@@ -72,10 +74,10 @@ Simon.prototype.initEvents = function (buttons) {
         console.log('LONGEST pressed');
     });
     document.getElementById(buttons.strict).addEventListener("click", this.strictMode.bind(this, buttons.strict, buttons.strictIcon));
-    document.getElementById(buttons.green).addEventListener("click", this.illuminateButton.bind(this, buttons.green, 0));
-    document.getElementById(buttons.red).addEventListener("click", this.illuminateButton.bind(this, buttons.red, 0));
-    document.getElementById(buttons.blue).addEventListener("click", this.illuminateButton.bind(this, buttons.blue, 0));
-    document.getElementById(buttons.yellow).addEventListener("click", this.illuminateButton.bind(this, buttons.yellow, 0));
+    document.getElementById(buttons.green).addEventListener("click", this.illuminateButton.bind(this, buttons.green, 0, 1));
+    document.getElementById(buttons.red).addEventListener("click", this.illuminateButton.bind(this, buttons.red, 0, 2));
+    document.getElementById(buttons.blue).addEventListener("click", this.illuminateButton.bind(this, buttons.blue, 0, 3));
+    document.getElementById(buttons.yellow).addEventListener("click", this.illuminateButton.bind(this, buttons.yellow, 0, 4));
 };
 
 Simon.prototype.start = function () {
@@ -88,13 +90,27 @@ Simon.prototype.start = function () {
     console.log('Start');
 };
 
+Simon.prototype.move = function (buttonNumber) {    
+    console.log('Button:', buttonNumber, 'Level:', this.lastLevel, 'Skill level:', this.skillLevel, 'Sequence:', this.sequence);    
+    // TODO: verify move
+    if(buttonNumber === this.sequence[this.moveCount]) {
+        console.log('Correct');
+    } else {
+        console.log('Wrong');
+    }
+    
+    //this.moveCount++;
+    console.log('Move count:' , this.moveCount);    
+}
+
 Simon.prototype.changeSkillLevel = function (level) {
-    console.log('skill', level);
+    console.log('Level: ', this.skillLevel)
     this.skillLevel = level;
+    // TODO: game restart message
     this.start(); //Restart game;
 };
 
-Simon.prototype.illuminateButton = function (buttonId, time) {
+Simon.prototype.illuminateButton = function (buttonId, time, buttonNumber) {
     var time2 = 0; // button light off delay
 
     if (time === 0) { // User click on colored buttons        
@@ -113,7 +129,8 @@ Simon.prototype.illuminateButton = function (buttonId, time) {
     setTimeout(function () {
         document.getElementById(buttonId).classList.remove("lighten");
     }, time2);
-
+    
+    this.move(buttonNumber);
 };
 
 Simon.prototype.displayLastSequence = function () {
