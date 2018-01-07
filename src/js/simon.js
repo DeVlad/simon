@@ -74,10 +74,10 @@ Simon.prototype.initEvents = function (buttons) {
         console.log('LONGEST pressed');
     });
     document.getElementById(buttons.strict).addEventListener("click", this.strictMode.bind(this, buttons.strict, buttons.strictIcon));
-    document.getElementById(buttons.green).addEventListener("click", this.illuminateButton.bind(this, buttons.green, 0, 1));
-    document.getElementById(buttons.red).addEventListener("click", this.illuminateButton.bind(this, buttons.red, 0, 2));
-    document.getElementById(buttons.blue).addEventListener("click", this.illuminateButton.bind(this, buttons.blue, 0, 3));
-    document.getElementById(buttons.yellow).addEventListener("click", this.illuminateButton.bind(this, buttons.yellow, 0, 4));
+    document.getElementById(buttons.green).addEventListener("click", this.move.bind(this, buttons.green, 1));
+    document.getElementById(buttons.red).addEventListener("click", this.move.bind(this, buttons.red, 2));
+    document.getElementById(buttons.blue).addEventListener("click", this.move.bind(this, buttons.blue, 3));
+    document.getElementById(buttons.yellow).addEventListener("click", this.move.bind(this, buttons.yellow, 4));
 };
 
 Simon.prototype.start = function () {
@@ -90,7 +90,7 @@ Simon.prototype.start = function () {
     console.log('Start');
 };
 
-Simon.prototype.move = function (buttonNumber) {    
+Simon.prototype.move = function (buttonId, buttonNumber) {    
     console.log('Button:', buttonNumber, 'Level:', this.lastLevel, 'Skill level:', this.skillLevel, 'Sequence:', this.sequence);    
     // TODO: verify move
     if(buttonNumber === this.sequence[this.moveCount]) {
@@ -98,6 +98,7 @@ Simon.prototype.move = function (buttonNumber) {
     } else {
         console.log('Wrong');
     }
+    this.illuminateButton(buttonId);
     
     //this.moveCount++;
     console.log('Move count:' , this.moveCount);    
@@ -110,7 +111,8 @@ Simon.prototype.changeSkillLevel = function (level) {
     this.start(); //Restart game;
 };
 
-Simon.prototype.illuminateButton = function (buttonId, time, buttonNumber) {
+Simon.prototype.illuminateButton = function (buttonId) {
+    var time = 0;
     var time2 = 0; // button light off delay
 
     if (time === 0) { // User click on colored buttons        
@@ -128,9 +130,8 @@ Simon.prototype.illuminateButton = function (buttonId, time, buttonNumber) {
 
     setTimeout(function () {
         document.getElementById(buttonId).classList.remove("lighten");
-    }, time2);
+    }, time2);    
     
-    this.move(buttonNumber);
 };
 
 Simon.prototype.displayLastSequence = function () {

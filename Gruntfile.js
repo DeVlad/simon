@@ -100,9 +100,9 @@ module.exports = function (grunt) {
       // includes files within path
                     {
                         expand: true,
-                        cwd: 'src/img',
+                        cwd: 'src/sound',
                         src: ['**'],
-                        dest: 'build/img/'
+                        dest: 'build/sound/'
                     }
 
       // includes files within path and its sub-directories
@@ -140,5 +140,5 @@ module.exports = function (grunt) {
     //grunt.loadNpmTasks('babel');
     // Default tasks
     //grunt.registerTask('default', ['auto_install', 'validation', 'uglify', 'postcss', 'processhtml', 'htmlmin', 'copy']);
-    grunt.registerTask('default', ['auto_install', 'uglify', 'concat', 'postcss', 'processhtml', 'htmlmin']);
+    grunt.registerTask('default', ['auto_install', 'uglify', 'concat', 'postcss', 'processhtml', 'htmlmin', 'copy']);
 };
