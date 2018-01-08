@@ -26,11 +26,12 @@ var settings = {
 
 function Simon(skillLevel) {
     this.skillLevel = skillLevel | 8;
-    this.lastLevel = 4;
-    this.sequence = [];    
+    this.lastLevel = 0;
+    this.sequence = [];
     this.longest = [];
     this.moveCount = 0;
     this.strict = false;
+    this.completeLevel = false;
     this.initEvents(settings.buttons);
 }
 
@@ -53,9 +54,9 @@ Simon.prototype.generateLevel = function () {
             level.push(this.generateRandomPosition(lastPosition));
             lastPosition = level[i];
         }
-        this.lastLevel++;
+        //this.lastLevel++;
         this.sequence = level;
-        this.moveCount = 0;
+        //this.moveCount = 0;
         return level;
     } else {
         return 'Game Over';
@@ -90,18 +91,61 @@ Simon.prototype.start = function () {
     console.log('Start');
 };
 
-Simon.prototype.move = function (buttonId, buttonNumber) {    
-    console.log('Button:', buttonNumber, 'Level:', this.lastLevel, 'Skill level:', this.skillLevel, 'Sequence:', this.sequence);    
-    // TODO: verify move
-    if(buttonNumber === this.sequence[this.moveCount]) {
+Simon.prototype.move = function (buttonId, buttonNumber) {
+    this.illuminateButton(buttonId, 0);
+    console.log('Button:', buttonNumber, 'Level:', this.lastLevel, 'Skill level:', this.skillLevel, 'Sequence:', this.sequence);
+    console.log('OUT Move count:', this.moveCount, 'Seq length:', this.sequence.length);
+    console.log('Button Number:', buttonNumber, 'sequence array item:', this.sequence[this.moveCount]);
+
+    if (buttonNumber === this.sequence[this.moveCount]) {
         console.log('Correct');
+        this.moveCount++;
+        console.log('IN Move count:', this.moveCount, 'Seq length:', this.sequence.length);
+        if (this.moveCount === this.sequence.length) {
+            this.completeLevel = true;
+            this.lastLevel++;
+            if (this.longest.length < this.sequence.length) {
+                this.longest = this.sequence;
+            }
+            console.log('Complete level', this.completeLevel);
+        }
     } else {
         console.log('Wrong');
+
+        if (this.strict) {
+            console.log('Strict Mode, Restart game');
+            this.moveCount = 0;
+            this.completeLevel = false;
+            this.start();
+        } else { // Wrong mov0e generate new sequence           
+            this.moveCount = 0;
+            this.completeLevel = false;
+            this.generateLevel();
+            this.displayMessage('Wrong');
+            //this.displayLevel();
+
+            // Pause 2 seconds
+            var that = this;
+            setTimeout(function () {
+                that.displayLevel();
+                that.displayLastSequence();
+            }, 2000);
+            //this.displayLastSequence();
+        }
     }
-    this.illuminateButton(buttonId);
+    console.log('Move count:', this.moveCount);
     
-    //this.moveCount++;
-    console.log('Move count:' , this.moveCount);    
+    if (this.completeLevel === true) {
+        console.log('Level Complete');
+        // this.lastLevel++;
+        this.generateLevel();
+        this.displayLevel();
+        this.displayLastSequence();
+        this.completeLevel === false;
+        this.moveCount = 0;
+        this.lastLevel++;
+        // if end game
+    }
 }
 
 Simon.prototype.changeSkillLevel = function (level) {
@@ -111,8 +155,7 @@ Simon.prototype.changeSkillLevel = function (level) {
     this.start(); //Restart game;
 };
 
-Simon.prototype.illuminateButton = function (buttonId) {
-    var time = 0;
+Simon.prototype.illuminateButton = function (buttonId, time) {
     var time2 = 0; // button light off delay
 
     if (time === 0) { // User click on colored buttons        
@@ -130,8 +173,8 @@ Simon.prototype.illuminateButton = function (buttonId) {
 
     setTimeout(function () {
         document.getElementById(buttonId).classList.remove("lighten");
-    }, time2);    
-    
+    }, time2);
+
 };
 
 Simon.prototype.displayLastSequence = function () {
@@ -146,8 +189,12 @@ Simon.prototype.displayLastSequence = function () {
 };
 
 Simon.prototype.displayLevel = function () {
-    var displayLevel = this.lastLevel === 0 ? this.lastlevel + 1 : this.lastLevel - 1;
+    var displayLevel = this.lastLevel //=== 0 ? this.lastlevel + 1 : this.lastLevel - 1;
     document.getElementById("display").innerHTML = displayLevel;
+};
+
+Simon.prototype.displayMessage = function (message) {
+    document.getElementById("display").innerHTML = message;
 };
 
 Simon.prototype.playSound = function (buttonId) {
@@ -157,19 +204,19 @@ Simon.prototype.playSound = function (buttonId) {
 };
 
 Simon.prototype.strictMode = function (buttonId, iconId) {
-        var strictModeStatus = 'Unknown';
-        if (this.strict) {
-            this.strict = false;
-            strictModeStatus = 'NO';
-            document.getElementById(iconId).classList.remove("red");
-            document.getElementById(iconId).classList.add("green");
-        } else {
-            this.strict = true;
-            strictModeStatus = 'YES';
-            document.getElementById(iconId).classList.remove("green");
-            document.getElementById(iconId).classList.add("red");
-        }
-        console.log('Strict mode: ', strictModeStatus);
+    var strictModeStatus = 'Unknown';
+    if (this.strict) {
+        this.strict = false;
+        strictModeStatus = 'NO';
+        document.getElementById(iconId).classList.remove("red");
+        document.getElementById(iconId).classList.add("green");
+    } else {
+        this.strict = true;
+        strictModeStatus = 'YES';
+        document.getElementById(iconId).classList.remove("green");
+        document.getElementById(iconId).classList.add("red");
+    }
+    console.log('Strict mode: ', strictModeStatus);
 };
 
 var game = new Simon();
