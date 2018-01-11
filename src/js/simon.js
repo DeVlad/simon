@@ -55,6 +55,7 @@ Simon.prototype.generateLevel = function () {
             lastPosition = level[i];
         }
         this.sequence = level;
+        console.log('Level', this.sequence);
         return level;
     } else {
         return 'Game Over';
@@ -62,12 +63,11 @@ Simon.prototype.generateLevel = function () {
 };
 
 Simon.prototype.initEvents = function (buttons) {
-    //console.log(settings);
     document.getElementById(buttons.skillLevel1).addEventListener("click", this.changeSkillLevel.bind(this, 8));
     document.getElementById(buttons.skillLevel2).addEventListener("click", this.changeSkillLevel.bind(this, 14));
     document.getElementById(buttons.skillLevel3).addEventListener("click", this.changeSkillLevel.bind(this, 20));
     document.getElementById(buttons.skillLevel4).addEventListener("click", this.changeSkillLevel.bind(this, 31));
-    document.getElementById(buttons.last).addEventListener("click", this.displaySequence.bind(this)); // TODO: check if game in progress
+    document.getElementById(buttons.last).addEventListener("click", this.displaySequence.bind(this));
     document.getElementById(buttons.start).addEventListener("click", this.start.bind(this));
     document.getElementById(buttons.longest).addEventListener("click", this.displaySequence.bind(this, 'longest'));
     document.getElementById(buttons.strict).addEventListener("click", this.strictMode.bind(this, buttons.strict, buttons.strictIcon));
@@ -83,51 +83,51 @@ Simon.prototype.start = function () {
     this.lastLevel = 1;
     this.generateLevel();
     this.displayLevel();
-    this.displaySequence('last');
+    this.displaySequence();
     console.log('Start');
 };
 
 Simon.prototype.move = function (buttonId, buttonNumber) {
     this.illuminateButton(buttonId, 0);
-    console.log('Button:', buttonNumber, 'Level:', this.lastLevel, 'Skill level:', this.skillLevel, 'Sequence:', this.sequence);
-    console.log('OUT Move count:', this.moveCount, 'Seq length:', this.sequence.length);
-    console.log('Button Number:', buttonNumber, 'sequence array item:', this.sequence[this.moveCount]);
+    //console.log('Button:', buttonNumber, 'Level:', this.lastLevel, 'Skill level:', this.skillLevel, 'Sequence:', this.sequence);
+    //console.log('OUT Move count:', this.moveCount, 'Seq length:', this.sequence.length);
+    //console.log('Button Number:', buttonNumber, 'sequence array item:', this.sequence[this.moveCount]);
 
-    if (buttonNumber === this.sequence[this.moveCount]) {
-        console.log('Correct');
+    if (buttonNumber === this.sequence[this.moveCount]) { // Correct move
+        //console.log('Correct');
         this.moveCount++;
-        console.log('IN Move count:', this.moveCount, 'Seq length:', this.sequence.length);
-        if (this.moveCount === this.sequence.length) {
+        //console.log('Move count:', this.moveCount, 'Seq length:', this.sequence.length);
+        if (this.moveCount === this.sequence.length) { // Level completed
             this.completeLevel = true;
             // TODO: Longest sequence            
             if (this.longest.length <= this.sequence.length) {
                 this.longest = this.sequence;
             }
-            console.log('Complete level !!!', this.completeLevel);
+            //console.log('Complete level !!!', this.completeLevel);
         }
-    } else {
-        console.log('Wrong');
-
+    } else { // Wrong move
+        //console.log('Wrong');
+        var that = this;
         if (this.strict) {
             console.log('Strict Mode, Restart game');
-            this.moveCount = 0;
             this.completeLevel = false;
-            this.start();
+            this.moveCount = 0;
+            setTimeout(function () { // Pause 3 seconds and restart game
+                that.start();
+            }, 3000);
+            this.displayMessage('Wrong');
+
         } else { // Wrong move: Generate new sequence
             this.moveCount = 0;
             this.completeLevel = false;
-
-            // Pause 3 seconds
-            var that = this;
-            setTimeout(function () {
+            setTimeout(function () { // Pause 3 seconds
                 that.displayLevel();
                 that.displaySequence();
             }, 3000);
             this.displayMessage('Wrong');
-            //this.displaySequence();
         }
     }
-    console.log('Move count:', this.moveCount);
+    // console.log('Move count:', this.moveCount);
 
     if (this.completeLevel === true) {
         console.log('Level Complete');
@@ -157,6 +157,7 @@ Simon.prototype.changeSkillLevel = function (level) {
     this.start(); //Restart game;
 };
 
+// Flash colored game buttons
 Simon.prototype.illuminateButton = function (buttonId, time) {
     var time2 = 0; // button light off delay
 
@@ -183,26 +184,27 @@ Simon.prototype.displaySequence = function (sequenceType) {
     var seq = [];
     if (sequenceType == 'longest') {
         seq = this.longest;
-        console.log('Longest Sequence', seq);
+        //console.log('Longest Sequence', seq);
     } else { // Display last sequence
         seq = this.sequence;
-        console.log('Last Sequence', seq);
+        //console.log('Last Sequence', seq);
     }
 
     var time = 0;
     for (var i = 0; i < seq.length; i++) {
-        // console.log('btn ', this.sequence[i]);        
         var buttonId = 'btn-' + seq[i];
         time = time + 1000;
         this.illuminateButton(buttonId, time);
     }
 };
 
+// Display number of current level
 Simon.prototype.displayLevel = function () {
     var displayLevel = this.lastLevel;
     document.getElementById("display").innerHTML = displayLevel;
 };
 
+// Display game messages
 Simon.prototype.displayMessage = function (message) {
     document.getElementById("display").innerHTML = message;
 };
