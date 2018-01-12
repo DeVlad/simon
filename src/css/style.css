@@ -1,5 +1,5 @@
 .wrapper {
-    margin-top: 4%;
+    margin-top: 1%;
     text-align: center;
 }
 
@@ -69,10 +69,13 @@ button {
     color: red;
 }
 
+.border {
+    border: 4px solid white;
+}
 
 /* Lighten Bittons */
 
 .lighten {
     box-shadow: inset 0 0 100px 100px rgba(255, 255, 255, 0.3);
-    border: 1px solid gray;
+    border-color: #eaeaea;
 }

@@ -55,7 +55,7 @@ Simon.prototype.generateLevel = function () {
             lastPosition = level[i];
         }
         this.sequence = level;
-        console.log('Level', this.sequence);
+        // console.log('Level', this.sequence);
         return level;
     } else {
         return 'Game Over';
@@ -84,7 +84,7 @@ Simon.prototype.start = function () {
     this.generateLevel();
     this.displayLevel();
     this.displaySequence();
-    console.log('Start');
+    //console.log('Start');
 };
 
 Simon.prototype.move = function (buttonId, buttonNumber) {
@@ -109,7 +109,7 @@ Simon.prototype.move = function (buttonId, buttonNumber) {
         //console.log('Wrong');
         var that = this;
         if (this.strict) {
-            console.log('Strict Mode, Restart game');
+            //console.log('Strict Mode, Restart game');
             this.completeLevel = false;
             this.moveCount = 0;
             setTimeout(function () { // Pause 3 seconds and restart game
@@ -130,7 +130,7 @@ Simon.prototype.move = function (buttonId, buttonNumber) {
     // console.log('Move count:', this.moveCount);
 
     if (this.completeLevel === true) {
-        console.log('Level Complete');
+        //console.log('Level Complete');
         this.lastLevel++;
         this.generateLevel();
 
@@ -144,22 +144,25 @@ Simon.prototype.move = function (buttonId, buttonNumber) {
         this.moveCount = 0;
 
         if (this.lastLevel > this.skillLevel) { // End game with success
-            console.log('Game Completed !');
+            //console.log('Game Completed !');
             this.stop(); // Stop game
         }
     }
 };
 
 Simon.prototype.changeSkillLevel = function (level) {
-    console.log('Level: ', this.skillLevel);
-    this.skillLevel = level;
-    // TODO: game restart message
-    this.start(); //Restart game;
+    //console.log('Level: ', this.skillLevel);
+    this.skillLevel = level;    
+    var that = this;
+    setTimeout(function () {
+            that.start(); // Restart game;
+    }, 3000);
+    that.displayMessage('Restarting');
 };
 
 // Flash colored game buttons
 Simon.prototype.illuminateButton = function (buttonId, time) {
-    var time2 = 0; // button light off delay
+    var time2 = 0; // Button light off delay
 
     if (time === 0) { // User click on colored buttons        
         time = 400;
@@ -228,7 +231,7 @@ Simon.prototype.strictMode = function (buttonId, iconId) {
         document.getElementById(iconId).classList.remove("green");
         document.getElementById(iconId).classList.add("red");
     }
-    console.log('Strict mode: ', strictModeStatus);
+    //console.log('Strict mode: ', strictModeStatus);
 };
 
 Simon.prototype.stop = function () {
