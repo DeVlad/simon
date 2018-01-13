@@ -61,6 +61,15 @@ button {
     margin-bottom: 5px;
 }
 
+#btn-strict {
+    margin-left: 30px;
+}
+
+#btn-start {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
 .green {
     color: green;
 }

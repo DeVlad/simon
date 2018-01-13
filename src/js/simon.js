@@ -4,7 +4,10 @@ Skill Levels:
 1. Sequence game of 8
 2. Sequence game of 14
 3. Sequence game of 20
-4. Sequence game of 31 */
+4. Sequence game of 31
+
+Strict mode: Restarts the game on every player mistake.
+*/
 
 var settings = {
     buttons: { // Button : Id
@@ -20,7 +23,9 @@ var settings = {
         last: "btn-last",
         longest: "btn-longest",
         strict: "btn-strict",
-        strictIcon: "icon-strict"
+        strictIcon: "icon-strict",
+        strictIndicatorOn: "red",
+        strictIndicatorOff: "green"
     }
 };
 
@@ -70,7 +75,7 @@ Simon.prototype.initEvents = function (buttons) {
     document.getElementById(buttons.last).addEventListener("click", this.displaySequence.bind(this));
     document.getElementById(buttons.start).addEventListener("click", this.start.bind(this));
     document.getElementById(buttons.longest).addEventListener("click", this.displaySequence.bind(this, 'longest'));
-    document.getElementById(buttons.strict).addEventListener("click", this.strictMode.bind(this, buttons.strict, buttons.strictIcon));
+    document.getElementById(buttons.strict).addEventListener("click", this.strictMode.bind(this, buttons.strictIcon));
     document.getElementById(buttons.green).addEventListener("click", this.move.bind(this, buttons.green, 1));
     document.getElementById(buttons.red).addEventListener("click", this.move.bind(this, buttons.red, 2));
     document.getElementById(buttons.blue).addEventListener("click", this.move.bind(this, buttons.blue, 3));
@@ -98,8 +103,7 @@ Simon.prototype.move = function (buttonId, buttonNumber) {
         this.moveCount++;
         //console.log('Move count:', this.moveCount, 'Seq length:', this.sequence.length);
         if (this.moveCount === this.sequence.length) { // Level completed
-            this.completeLevel = true;
-            // TODO: Longest sequence            
+            this.completeLevel = true;                   
             if (this.longest.length <= this.sequence.length) {
                 this.longest = this.sequence;
             }
@@ -218,20 +222,17 @@ Simon.prototype.playSound = function (buttonId) {
     sound.play();
 };
 
-Simon.prototype.strictMode = function (buttonId, iconId) {
-    var strictModeStatus = 'Unknown';
+// Strict mode switch
+Simon.prototype.strictMode = function (iconId) {    
     if (this.strict) {
-        this.strict = false;
-        strictModeStatus = 'NO';
-        document.getElementById(iconId).classList.remove("red");
-        document.getElementById(iconId).classList.add("green");
+        this.strict = false;        
+        document.getElementById(iconId).classList.remove(settings.buttons.strictIndicatorOn);
+        document.getElementById(iconId).classList.add(settings.buttons.strictIndicatorOff);
     } else {
-        this.strict = true;
-        strictModeStatus = 'YES';
-        document.getElementById(iconId).classList.remove("green");
-        document.getElementById(iconId).classList.add("red");
+        this.strict = true;        
+        document.getElementById(iconId).classList.remove(settings.buttons.strictIndicatorOff);
+        document.getElementById(iconId).classList.add(settings.buttons.strictIndicatorOn);
     }
-    //console.log('Strict mode: ', strictModeStatus);
 };
 
 Simon.prototype.stop = function () {
