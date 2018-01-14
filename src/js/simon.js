@@ -42,6 +42,7 @@ function Simon(skillLevel) {
 
 Simon.prototype.generateRandomPosition = function (lastPosition) {
     var random = 0;
+
     if (lastPosition >= 0 && lastPosition <= 4) {
         do {
             random = Math.floor(Math.random() * 4) + 1;
@@ -60,10 +61,9 @@ Simon.prototype.generateLevel = function () {
             lastPosition = level[i];
         }
         this.sequence = level;
-        // console.log('Level', this.sequence);
         return level;
     } else {
-        return 'Game Over';
+        console.log('Error');
     }
 };
 
@@ -89,56 +89,51 @@ Simon.prototype.start = function () {
     this.generateLevel();
     this.displayLevel();
     this.displaySequence();
-    //console.log('Start');
 };
 
 Simon.prototype.move = function (buttonId, buttonNumber) {
     this.illuminateButton(buttonId, 0);
-    //console.log('Button:', buttonNumber, 'Level:', this.lastLevel, 'Skill level:', this.skillLevel, 'Sequence:', this.sequence);
-    //console.log('OUT Move count:', this.moveCount, 'Seq length:', this.sequence.length);
-    //console.log('Button Number:', buttonNumber, 'sequence array item:', this.sequence[this.moveCount]);
 
     if (buttonNumber === this.sequence[this.moveCount]) { // Correct move
-        //console.log('Correct');
         this.moveCount++;
-        //console.log('Move count:', this.moveCount, 'Seq length:', this.sequence.length);
+
         if (this.moveCount === this.sequence.length) { // Level completed
-            this.completeLevel = true;                   
+            this.completeLevel = true;
             if (this.longest.length <= this.sequence.length) {
                 this.longest = this.sequence;
             }
-            //console.log('Complete level !!!', this.completeLevel);
         }
-    } else { // Wrong move
-        //console.log('Wrong');
+    } else { // Wrong move                
         var that = this;
+
         if (this.strict) {
-            //console.log('Strict Mode, Restart game');
             this.completeLevel = false;
             this.moveCount = 0;
+
             setTimeout(function () { // Pause 3 seconds and restart game
                 that.start();
             }, 3000);
+
             this.displayMessage('Wrong');
 
         } else { // Wrong move: Generate new sequence
             this.moveCount = 0;
             this.completeLevel = false;
+
             setTimeout(function () { // Pause 3 seconds
                 that.displayLevel();
                 that.displaySequence();
             }, 3000);
+
             this.displayMessage('Wrong');
         }
     }
-    // console.log('Move count:', this.moveCount);
 
-    if (this.completeLevel === true) {
-        //console.log('Level Complete');
+    if (this.completeLevel === true) { // Level completed
         this.lastLevel++;
         this.generateLevel();
-
         var that2 = this;
+
         setTimeout(function () {
             that2.displayLevel();
             that2.displaySequence();
@@ -147,20 +142,20 @@ Simon.prototype.move = function (buttonId, buttonNumber) {
         this.completeLevel = false;
         this.moveCount = 0;
 
-        if (this.lastLevel > this.skillLevel) { // End game with success
-            //console.log('Game Completed !');
+        if (this.lastLevel > this.skillLevel) { // End game with success  
             this.stop(); // Stop game
         }
     }
 };
 
 Simon.prototype.changeSkillLevel = function (level) {
-    //console.log('Level: ', this.skillLevel);
-    this.skillLevel = level;    
+    this.skillLevel = level;
     var that = this;
+
     setTimeout(function () {
-            that.start(); // Restart game;
+        that.start(); // Restart game;
     }, 3000);
+
     that.displayMessage('Restarting');
 };
 
@@ -168,7 +163,7 @@ Simon.prototype.changeSkillLevel = function (level) {
 Simon.prototype.illuminateButton = function (buttonId, time) {
     var time2 = 0; // Button light off delay
 
-    if (time === 0) { // User click on colored buttons        
+    if (time === 0) { // User click on colored buttons
         time = 400;
         time2 = 600;
     } else {
@@ -176,6 +171,7 @@ Simon.prototype.illuminateButton = function (buttonId, time) {
     }
 
     var that = this;
+
     setTimeout(function () {
         document.getElementById(buttonId).classList.add("lighten");
         that.playSound(buttonId);
@@ -189,15 +185,15 @@ Simon.prototype.illuminateButton = function (buttonId, time) {
 
 Simon.prototype.displaySequence = function (sequenceType) {
     var seq = [];
+
     if (sequenceType == 'longest') {
         seq = this.longest;
-        //console.log('Longest Sequence', seq);
     } else { // Display last sequence
         seq = this.sequence;
-        //console.log('Last Sequence', seq);
     }
 
     var time = 0;
+
     for (var i = 0; i < seq.length; i++) {
         var buttonId = 'btn-' + seq[i];
         time = time + 1000;
@@ -223,13 +219,13 @@ Simon.prototype.playSound = function (buttonId) {
 };
 
 // Strict mode switch
-Simon.prototype.strictMode = function (iconId) {    
+Simon.prototype.strictMode = function (iconId) {
     if (this.strict) {
-        this.strict = false;        
+        this.strict = false;
         document.getElementById(iconId).classList.remove(settings.buttons.strictIndicatorOn);
         document.getElementById(iconId).classList.add(settings.buttons.strictIndicatorOff);
     } else {
-        this.strict = true;        
+        this.strict = true;
         document.getElementById(iconId).classList.remove(settings.buttons.strictIndicatorOff);
         document.getElementById(iconId).classList.add(settings.buttons.strictIndicatorOn);
     }
@@ -237,6 +233,7 @@ Simon.prototype.strictMode = function (iconId) {
 
 Simon.prototype.stop = function () {
     var that = this;
+
     setTimeout(function () {
         that.displayMessage('You Win !');
     }, 3000);
